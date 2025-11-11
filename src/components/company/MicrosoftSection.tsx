@@ -161,6 +161,171 @@ const ConfirmationModal = ({
   );
 };
 
+const McaAttestationModal = ({
+  open,
+  onClose,
+  mcaSignatory,
+  setMcaSignatory,
+  onSubmit,
+  isGenerateMode
+}: {
+  open: boolean;
+  onClose: () => void;
+  mcaSignatory: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    country: string;
+    dateAccepted: string;
+  };
+  setMcaSignatory: React.Dispatch<React.SetStateAction<{
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    country: string;
+    dateAccepted: string;
+  }>>;
+  onSubmit: () => void;
+  isGenerateMode: boolean;
+}) => {
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
+        <h2 className="text-lg font-semibold mb-4 text-gray-800">
+          {isGenerateMode ? 'Generate MCA Agreement' : 'Update MCA Authorization'}
+        </h2>
+        
+        {!isGenerateMode && (
+          <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <h3 className="text-sm font-semibold text-blue-800 mb-2">Current Signatory Information</h3>
+            <div className="text-xs text-blue-700 space-y-1">
+              <div><span className="font-semibold">Name:</span> {mcaSignatory.firstName} {mcaSignatory.lastName}</div>
+              <div><span className="font-semibold">Email:</span> {mcaSignatory.email}</div>
+              <div><span className="font-semibold">Phone:</span> {mcaSignatory.phoneNumber}</div>
+              <div><span className="font-semibold">Country:</span> {mcaSignatory.country}</div>
+              <div><span className="font-semibold">Date Accepted:</span> {mcaSignatory.dateAccepted}</div>
+            </div>
+          </div>
+        )}
+
+        <p className="text-sm text-gray-600 mb-4">
+          {isGenerateMode 
+            ? 'Please provide the authorized signatory information to generate a new Microsoft Customer Agreement.'
+            : 'Update the authorized signatory information for the Microsoft Customer Agreement.'
+          }
+        </p>
+
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                First Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={mcaSignatory.firstName}
+                onChange={(e) => setMcaSignatory(prev => ({ ...prev, firstName: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                placeholder="John"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Last Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={mcaSignatory.lastName}
+                onChange={(e) => setMcaSignatory(prev => ({ ...prev, lastName: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                placeholder="Smith"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email Address <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              value={mcaSignatory.email}
+              onChange={(e) => setMcaSignatory(prev => ({ ...prev, email: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              placeholder="john.smith@example.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Phone Number <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              value={mcaSignatory.phoneNumber}
+              onChange={(e) => setMcaSignatory(prev => ({ ...prev, phoneNumber: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              placeholder="+1 (555) 123-4567"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Country <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={mcaSignatory.country}
+              onChange={(e) => setMcaSignatory(prev => ({ ...prev, country: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            >
+              <option value="">Select Country</option>
+              <option value="United States">United States</option>
+              <option value="Canada">Canada</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Australia">Australia</option>
+              <option value="Germany">Germany</option>
+              <option value="France">France</option>
+              <option value="Japan">Japan</option>
+              <option value="India">India</option>
+              <option value="Brazil">Brazil</option>
+              <option value="Mexico">Mexico</option>
+              <option value="Spain">Spain</option>
+              <option value="Italy">Italy</option>
+              <option value="Netherlands">Netherlands</option>
+              <option value="Sweden">Sweden</option>
+              <option value="Switzerland">Switzerland</option>
+              <option value="Singapore">Singapore</option>
+              <option value="South Korea">South Korea</option>
+              <option value="New Zealand">New Zealand</option>
+              <option value="Ireland">Ireland</option>
+              <option value="Belgium">Belgium</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex justify-end space-x-3 mt-6">
+          <button
+            className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors text-sm font-medium"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm font-medium"
+            onClick={onSubmit}
+          >
+            {isGenerateMode ? 'Generate Agreement' : 'Update Authorization'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const MpnSetupModal = ({
   open,
   onClose,
@@ -888,10 +1053,12 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
 
   // Toggle authorization status for demo purposes
   const toggleAuthorizationStatus = () => {
-    setPartnerInfo(prev => ({
-      ...prev,
-      isAuthorized: !prev.isAuthorized
-    }));
+    setMcaStatus(prev => {
+      if (prev === 'valid') return 'invalid';
+      if (prev === 'invalid') return 'pending';
+      if (prev === 'pending') return 'valid';
+      return 'valid';
+    });
   };
 
   // Toggle configuration status for demo purposes
@@ -934,12 +1101,36 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
       assignedSeats: 235,
       activeUsers: 198,
       monthlyRevenue: 6250.00,
+      marginPercent: 8.5,
       deploymentPercentage: 94.0,
       usagePercentage: 84.3,
       status: 'good',
       subscriptions: [
-        { name: 'Microsoft 365 Business Premium', seats: 150, assigned: 145, active: 128, revenue: 3750.00, termType: 'Annual billed Monthly' },
-        { name: 'Microsoft 365 E3', seats: 100, assigned: 90, active: 70, revenue: 2500.00, termType: 'Triannual Upfront' }
+        { 
+          name: 'Microsoft 365 Business Premium', 
+          seats: 150, 
+          assigned: 145, 
+          active: 128, 
+          revenue: 3750.00,
+          marginPercent: 9.2,
+          termTypes: [
+            { type: 'Annual Upfront', seats: 80, assigned: 78, active: 68, revenue: 2000.00, marginPercent: 11.5 },
+            { type: 'Annual billed Monthly', seats: 50, assigned: 48, active: 42, revenue: 1250.00, marginPercent: 7.8 },
+            { type: 'Monthly billed Monthly', seats: 20, assigned: 19, active: 18, revenue: 500.00, marginPercent: 6.2 }
+          ]
+        },
+        { 
+          name: 'Microsoft 365 E3', 
+          seats: 100, 
+          assigned: 90, 
+          active: 70, 
+          revenue: 2500.00,
+          marginPercent: 7.5,
+          termTypes: [
+            { type: 'Triannual Upfront', seats: 60, assigned: 55, active: 45, revenue: 1500.00, marginPercent: 8.8 },
+            { type: 'Annual billed Monthly', seats: 40, assigned: 35, active: 25, revenue: 1000.00, marginPercent: 5.5 }
+          ]
+        }
       ],
       azurePlan: {
         active: true,
@@ -960,12 +1151,36 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
       assignedSeats: 380,
       activeUsers: 285,
       monthlyRevenue: 11250.00,
+      marginPercent: 6.8,
       deploymentPercentage: 84.4,
       usagePercentage: 75.0,
       status: 'warning',
       subscriptions: [
-        { name: 'Microsoft 365 E5', seats: 200, assigned: 180, active: 155, revenue: 8000.00, termType: 'Annual Upfront' },
-        { name: 'Microsoft 365 Business Standard', seats: 250, assigned: 200, active: 130, revenue: 3250.00, termType: 'Monthly billed Monthly' }
+        { 
+          name: 'Microsoft 365 E5', 
+          seats: 200, 
+          assigned: 180, 
+          active: 155, 
+          revenue: 8000.00,
+          marginPercent: 7.2,
+          termTypes: [
+            { type: 'Annual Upfront', seats: 120, assigned: 110, active: 95, revenue: 4800.00, marginPercent: 10.5 },
+            { type: 'Triannual Upfront', seats: 50, assigned: 45, active: 40, revenue: 2000.00, marginPercent: 5.8 },
+            { type: 'Annual billed Monthly', seats: 30, assigned: 25, active: 20, revenue: 1200.00, marginPercent: 3.2 }
+          ]
+        },
+        { 
+          name: 'Microsoft 365 Business Standard', 
+          seats: 250, 
+          assigned: 200, 
+          active: 130, 
+          revenue: 3250.00,
+          marginPercent: 6.0,
+          termTypes: [
+            { type: 'Annual billed Monthly', seats: 150, assigned: 120, active: 80, revenue: 1950.00, marginPercent: 7.5 },
+            { type: 'Monthly billed Monthly', seats: 100, assigned: 80, active: 50, revenue: 1300.00, marginPercent: 3.8 }
+          ]
+        }
       ],
       azurePlan: {
         active: true,
@@ -986,11 +1201,24 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
       assignedSeats: 80,
       activeUsers: 45,
       monthlyRevenue: 2000.00,
+      marginPercent: 11.2,
       deploymentPercentage: 64.0,
       usagePercentage: 56.3,
       status: 'poor',
       subscriptions: [
-        { name: 'Microsoft 365 Business Basic', seats: 125, assigned: 80, active: 45, revenue: 2000.00, termType: 'Triannual Upfront' }
+        { 
+          name: 'Microsoft 365 Business Basic', 
+          seats: 125, 
+          assigned: 80, 
+          active: 45, 
+          revenue: 2000.00,
+          marginPercent: 11.2,
+          termTypes: [
+            { type: 'Annual Upfront', seats: 60, assigned: 40, active: 25, revenue: 960.00, marginPercent: 12.8 },
+            { type: 'Monthly billed Monthly', seats: 45, assigned: 28, active: 15, revenue: 720.00, marginPercent: 9.5 },
+            { type: 'Triannual Upfront', seats: 20, assigned: 12, active: 5, revenue: 320.00, marginPercent: 10.3 }
+          ]
+        }
       ],
       azurePlan: {
         active: true,
@@ -1015,6 +1243,31 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
   const [showQualificationConfirmation, setShowQualificationConfirmation] = useState(false);
   const [selectedQualification, setSelectedQualification] = useState('');
   const [selectedDomain, setSelectedDomain] = useState('');
+
+  // Special Qualifications form state (End Customer)
+  const [specialQualification, setSpecialQualification] = useState('');
+  const [specialQualificationSegment, setSpecialQualificationSegment] = useState('');
+  const [specialQualificationWebsite, setSpecialQualificationWebsite] = useState('');
+  const [showSpecialQualificationForm, setShowSpecialQualificationForm] = useState(false);
+  const [pendingSpecialQualifications, setPendingSpecialQualifications] = useState<Array<{
+    type: string;
+    segment?: string;
+    website: string;
+    status: 'pending' | 'approved' | 'rejected';
+    submittedDate: string;
+  }>>([]);
+
+  // MCA Authorization state (End Customer)
+  const [mcaStatus, setMcaStatus] = useState<'valid' | 'invalid' | 'pending'>('valid');
+  const [showMcaModal, setShowMcaModal] = useState(false);
+  const [mcaSignatory, setMcaSignatory] = useState({
+    firstName: 'John',
+    lastName: 'Smith',
+    email: 'john.smith@example.com',
+    phoneNumber: '+1 (555) 123-4567',
+    country: 'United States',
+    dateAccepted: 'Jan 15, 2024',
+  });
 
   // Section open/close state
   const [gdapSectionOpen, setGdapSectionOpen] = useState(false);
@@ -1045,6 +1298,48 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
         i === idx ? { ...rel, autoExtend: value } : rel
       )
     );
+  };
+
+  const isSpecialQualificationFormValid = () => {
+    if (!specialQualification) return false;
+    
+    // For Education, require both segment and website
+    if (specialQualification === 'Education') {
+      return specialQualificationSegment !== '' && specialQualificationWebsite !== '';
+    }
+    
+    // For other qualifications, just require the qualification type to be selected
+    // Website is optional for non-Education qualifications
+    return true;
+  };
+
+  const handleSpecialQualificationSync = () => {
+    notifications.show({
+      title: 'Syncing...',
+      message: 'Refreshing Special Qualifications from Microsoft',
+      color: 'blue',
+      autoClose: 2000,
+    });
+  };
+
+  const handleSpecialQualificationDemoReset = () => {
+    setPendingSpecialQualifications([]);
+    notifications.show({
+      title: 'Reset Complete',
+      message: 'All pending Special Qualifications have been cleared',
+      color: 'gray',
+      autoClose: 2000,
+    });
+  };
+
+  const handleMcaSubmit = () => {
+    setMcaStatus('pending');
+    setShowMcaModal(false);
+    notifications.show({
+      title: 'MCA Authorization Submitted',
+      message: 'Your Microsoft Customer Agreement authorization is being processed.',
+      color: 'blue',
+    });
   };
 
   const handleGdapNew = () => {
@@ -1430,6 +1725,47 @@ Best regards,
     }
   };
 
+  // End-customer subscription data with term type breakdown
+  const endCustomerSubscriptions = [
+    {
+      name: 'Microsoft 365 Business Premium',
+      seats: 100,
+      assigned: 96,
+      active: 82,
+      revenue: 1200.00,
+      marginPercent: 9.5,
+      termTypes: [
+        { type: 'Annual Upfront', seats: 60, assigned: 58, active: 50, revenue: 720.00, marginPercent: 11.2 },
+        { type: 'Annual billed Monthly', seats: 30, assigned: 28, active: 24, revenue: 360.00, marginPercent: 8.5 },
+        { type: 'Monthly billed Monthly', seats: 10, assigned: 10, active: 8, revenue: 120.00, marginPercent: 5.8 }
+      ]
+    },
+    {
+      name: 'Office 365 E3',
+      seats: 50,
+      assigned: 46,
+      active: 36,
+      revenue: 600.00,
+      marginPercent: 7.8,
+      termTypes: [
+        { type: 'Triannual Upfront', seats: 35, assigned: 32, active: 26, revenue: 420.00, marginPercent: 9.2 },
+        { type: 'Annual billed Monthly', seats: 15, assigned: 14, active: 10, revenue: 180.00, marginPercent: 4.8 }
+      ]
+    },
+    {
+      name: 'Power BI Pro',
+      seats: 15,
+      assigned: 15,
+      active: 15,
+      revenue: 150.00,
+      marginPercent: 10.5,
+      termTypes: [
+        { type: 'Monthly billed Monthly', seats: 10, assigned: 10, active: 10, revenue: 100.00, marginPercent: 11.8 },
+        { type: 'Annual billed Monthly', seats: 5, assigned: 5, active: 5, revenue: 50.00, marginPercent: 8.2 }
+      ]
+    }
+  ];
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'good': return 'text-green-700 bg-green-100';
@@ -1437,6 +1773,13 @@ Best regards,
       case 'poor': return 'text-red-700 bg-red-100';
       default: return 'text-gray-700 bg-gray-100';
     }
+  };
+
+  // Helper function to get color classes for margin percentages
+  const getMarginColor = (marginPercent: number) => {
+    if (marginPercent >= 10) return 'text-green-700 font-semibold';
+    if (marginPercent >= 5) return 'text-yellow-700 font-semibold';
+    return 'text-red-700 font-semibold';
   };
 
   const getAzureCostStatus = (projected: number, threshold: number) => {
@@ -1622,13 +1965,13 @@ Best regards,
         <h3 className="text-lg font-bold text-gray-800">Microsoft</h3>
         <button
           onClick={toggleConfigurationStatus}
-          className="flex items-center space-x-2 px-3 py-1.5 bg-indigo-100 border border-indigo-300 rounded-md hover:bg-indigo-200 transition-colors text-xs font-medium text-indigo-700"
+          className="flex items-center space-x-1.5 px-2 py-1 bg-indigo-50 border border-indigo-200 rounded hover:bg-indigo-100 transition-colors text-[10px] font-medium text-indigo-600 uppercase tracking-wide"
           title="Toggle between new and existing reseller experience"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          <span>DEMO: {partnerInfo.isConfigured ? 'Show Onboarding' : 'Show Configured'}</span>
+          <span>Demo: {partnerInfo.isConfigured ? 'Show Onboarding' : 'Show Configured'}</span>
         </button>
       </div>
       
@@ -1708,80 +2051,136 @@ Best regards,
             </div>
           </div>
         </div>
-      ) : (
-        // Configured UI - When MPN ID is set
+      ) : !partnerInfo.isReseller ? (
+        // Configured UI for End-Customers - When MPN ID is set (1:1 relationship)
         <ExpandableSection
           title={
             <div className="w-full">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-bold text-gray-800">Microsoft Partner Network (MPN ID) Reseller Details</h3>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleAuthorizationStatus();
-                  }}
-                  className="flex items-center space-x-2 px-3 py-1.5 bg-purple-100 border border-purple-300 rounded-md hover:bg-purple-200 transition-colors text-xs font-medium text-purple-700"
-                  title="Toggle authorization status for demo purposes"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                  </svg>
-                  <span>DEMO: Toggle Status</span>
-                </button>
+                <h3 className="text-base font-bold text-gray-800">Customer Tenant Information</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center justify-between bg-blue-50 border-2 border-blue-300 rounded-lg p-3">
+              <div className="space-y-2">
+                {/* Customer Tenant Information First */}
+                <div className="flex items-center justify-between bg-gray-50 border-2 border-gray-300 rounded-lg p-2">
                   <div className="flex items-center">
-                    <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full mr-3">
-                      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                    <div className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full mr-2">
+                      <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                       </svg>
                     </div>
                     <div>
-                      <div className="text-xs font-medium text-blue-700 uppercase tracking-wide">MPN ID</div>
-                      <div className="text-xl font-bold text-blue-800 font-mono">{partnerInfo.mpnId}</div>
+                      <div className="text-xs font-medium text-gray-700 uppercase tracking-wide">Customer Tenant Information</div>
+                      <div className="text-sm font-bold text-gray-900 mt-0.5">{tenantData.domain}</div>
+                      <div className="text-xs text-gray-600 font-mono mt-0.5">Tenant ID: {tenantData.tenantId}</div>
                     </div>
                   </div>
                 </div>
-                <div className={`flex items-center justify-between rounded-lg p-3 border-2 ${
-                  partnerInfo.isAuthorized 
+
+                {/* MCA Authorization Status Second */}
+                <div className={`rounded-lg p-2 border-2 ${
+                  mcaStatus === 'valid' 
                     ? 'bg-green-50 border-green-300' 
+                    : mcaStatus === 'pending'
+                    ? 'bg-amber-50 border-amber-300'
                     : 'bg-red-50 border-red-300'
                 }`}>
-                  <div className="flex items-center">
-                    <div className={`flex items-center justify-center w-10 h-10 rounded-full mr-3 ${
-                      partnerInfo.isAuthorized ? 'bg-green-100' : 'bg-red-100'
-                    }`}>
-                      {partnerInfo.isAuthorized ? (
-                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-xs font-medium uppercase tracking-wide text-gray-500">MCA Authorization Status</div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleAuthorizationStatus();
+                      }}
+                      className="flex items-center space-x-1 px-1.5 py-0.5 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors text-[9px] font-medium text-gray-600 uppercase tracking-wide"
+                      title="Demo: Cycle through MCA statuses"
+                    >
+                      <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      <span>Demo</span>
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center flex-1">
+                      <div className={`flex items-center justify-center w-8 h-8 rounded-full mr-2 ${
+                        mcaStatus === 'valid' ? 'bg-green-100' : mcaStatus === 'pending' ? 'bg-amber-100' : 'bg-red-100'
+                      }`}>
+                        {mcaStatus === 'valid' ? (
+                          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
+                        ) : mcaStatus === 'pending' ? (
+                          <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                       ) : (
-                        <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       )}
                     </div>
                     <div>
-                      <div className={`text-xs font-medium uppercase tracking-wide ${
-                        partnerInfo.isAuthorized ? 'text-green-700' : 'text-red-700'
-                      }`}>Authorization Status</div>
-                      <div className={`text-xl font-bold ${
-                        partnerInfo.isAuthorized ? 'text-green-800' : 'text-red-800'
-                      }`}>
-                        {partnerInfo.isAuthorized ? 'AUTHORIZED' : 'NOT AUTHORIZED'}
+                        <div className={`text-lg font-bold ${
+                          mcaStatus === 'valid' ? 'text-green-800' : mcaStatus === 'pending' ? 'text-amber-800' : 'text-red-800'
+                        }`}>
+                          {mcaStatus === 'valid' ? 'VALID' : mcaStatus === 'pending' ? 'PENDING' : 'NOT AUTHORIZED'}
                       </div>
+                      </div>
+                    </div>
+                    <div className="ml-2">
+                      {mcaStatus === 'valid' && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowMcaModal(true);
+                          }}
+                          className="px-3 py-1.5 text-xs rounded border border-green-300 bg-green-100 text-green-700 hover:bg-green-200 transition-colors font-medium"
+                        >
+                          Update
+                        </button>
+                      )}
+                      {mcaStatus === 'invalid' && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowMcaModal(true);
+                          }}
+                          className="px-3 py-1.5 text-xs rounded border border-red-300 bg-red-100 text-red-700 hover:bg-red-200 transition-colors font-medium"
+                        >
+                          Generate Agreement
+                        </button>
+                      )}
+                      {mcaStatus === 'pending' && (
+                        <span className="px-3 py-1.5 text-xs rounded border border-amber-300 bg-amber-100 text-amber-700 font-medium">
+                          Processing...
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Reseller of Record (MPN ID) Third */}
+                <div className="flex items-center justify-between bg-blue-50 border-2 border-blue-300 rounded-lg p-2">
+                  <div className="flex items-center">
+                    <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full mr-2">
+                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="text-xs font-medium text-blue-700 uppercase tracking-wide">Reseller of Record (MPN ID)</div>
+                      <div className="text-lg font-bold text-blue-800 font-mono">{partnerInfo.mpnId}</div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           }
-          defaultOpen={!partnerInfo.isAuthorized}
+          defaultOpen={mcaStatus === 'invalid'}
           sectionId="microsoft-partner-info"
-          className="mb-6 bg-white border border-gray-200 rounded-lg shadow"
+          className="mb-4 bg-white border border-gray-200 rounded-lg shadow"
         >
-        {!partnerInfo.isAuthorized && (
+        {mcaStatus === 'invalid' && (
             <div className="mt-4 bg-red-50 border-2 border-red-300 rounded-lg p-4">
               <div className="flex items-start mb-3">
                 <svg className="w-6 h-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1828,12 +2227,511 @@ Best regards,
             </div>
         )}
       </ExpandableSection>
-      )}
+      ) : null}
+
+      {/* GDAP Relationships - For End Customers */}
+      {!partnerInfo.isReseller && partnerInfo.isConfigured ? (
+      <>
+      <ExpandableSection
+        title="GDAP Relationships"
+        defaultOpen={false}
+        className="mb-4 bg-white border border-gray-200 rounded-lg shadow p-4"
+        helpContent="Granular Delegated Admin Privileges (GDAP) define the specific permissions your reseller has to manage your Microsoft 365 environment, including user management, license assignment, and security settings."
+      >
+        {/* Active GDAP Relationship */}
+        <ExpandableSection
+          title={
+            <div className="flex items-center justify-between w-full">
+              <div className="flex flex-col">
+                <span className="font-medium">Default_Partner_Admin</span>
+                <span className="text-xs text-gray-600 mt-1">
+                  Reseller: MPN ID {partnerInfo.mpnId}
+                </span>
+              </div>
+              <span className="text-xs font-bold uppercase text-green-700 bg-green-100 rounded px-2 py-1 ml-2">Active</span>
+            </div>
+          }
+          defaultOpen={false}
+          className="mb-3 border border-gray-200 bg-gray-50"
+        >
+          <div className="text-xs text-gray-600 mb-2">This is a Default GDAP relationship and was assigned when your tenant was created.</div>
+          <div className="text-xs text-gray-500 mb-2">
+            Relationship is valid from Jan 15, 2024 to Jan 15, 2026
+          </div>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex-1"></div>
+            <div className="flex items-center">
+              <span className="text-xs text-gray-700 mr-2">Renew every 180 days</span>
+              <Toggle enabled={true} onChange={() => {}} size="sm" />
+            </div>
+          </div>
+          <ul className="text-xs text-gray-700 space-y-1">
+            <li className="flex items-center py-2">
+              <span className="mr-2 text-green-400">✔</span> Global Administrator
+            </li>
+            <li className="flex items-center py-2">
+              <span className="mr-2 text-green-400">✔</span> User Administrator
+            </li>
+            <li className="flex items-center py-2">
+              <span className="mr-2 text-green-400">✔</span> Security Administrator
+            </li>
+          </ul>
+        </ExpandableSection>
+
+        {/* Pending GDAP Relationship */}
+        <ExpandableSection
+          title={
+            <div className="flex items-center justify-between w-full">
+              <div className="flex flex-col">
+                <span className="font-medium">Helpdesk_Support</span>
+                <span className="text-xs text-gray-600 mt-1">
+                  Reseller: MPN ID {partnerInfo.mpnId}
+                </span>
+              </div>
+              <span className="text-xs font-bold uppercase text-yellow-700 bg-yellow-100 rounded px-2 py-1 ml-2">Pending</span>
+            </div>
+          }
+          defaultOpen={false}
+          className="mb-3 border border-gray-200 bg-gray-50"
+        >
+          <div className="text-xs text-gray-600 mb-2">This GDAP relationship request has been sent to you and is awaiting your approval.</div>
+          <div className="text-xs text-gray-500 mb-2">
+            Request sent on Nov 8, 2025 - awaiting approval
+          </div>
+          <ul className="text-xs text-gray-700 space-y-1 mb-3">
+            <li className="flex items-center py-2">
+              <span className="mr-2 text-green-400">✔</span> Helpdesk Administrator
+            </li>
+            <li className="flex items-center py-2">
+              <span className="mr-2 text-green-400">✔</span> Password Administrator
+            </li>
+          </ul>
+          <div className="bg-blue-50 border border-blue-200 rounded p-3 mt-3">
+            <div className="flex items-start">
+              <svg className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div className="text-xs text-blue-800">
+                <span className="font-semibold">Action Required:</span> To approve or reject this GDAP request, please sign in to your Microsoft 365 Admin Center and navigate to Partner relationships.
+              </div>
+            </div>
+          </div>
+        </ExpandableSection>
+      </ExpandableSection>
+
+      {/* Special Qualifications - For End Customers */}
+      <ExpandableSection
+        title={
+          <div className="flex items-center w-full">
+            <span className="flex-1">Special Qualifications</span>
+            <div className="flex items-center space-x-2">
+              {!showSpecialQualificationForm && (
+                <ActionButton onClick={() => setShowSpecialQualificationForm(true)}>New</ActionButton>
+              )}
+              <ActionButton onClick={handleSpecialQualificationSync}>Sync</ActionButton>
+              {pendingSpecialQualifications.length > 0 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSpecialQualificationDemoReset();
+                  }}
+                  className="flex items-center space-x-1.5 px-2 py-1 bg-gray-50 border border-gray-200 rounded hover:bg-gray-100 transition-colors text-[10px] font-medium text-gray-600 uppercase tracking-wide"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span>Demo: Reset</span>
+                </button>
+              )}
+            </div>
+          </div>
+        }
+        defaultOpen={false}
+        className="mb-4 bg-white border border-gray-200 rounded-lg shadow p-4"
+        helpContent="Request a Special Qualification from Microsoft for your organization. These qualifications provide access to specialized pricing and programs for eligible organizations."
+      >
+        {/* Display Pending Qualifications */}
+        {pendingSpecialQualifications.length > 0 && (
+          <div className="space-y-2 mb-4">
+            {pendingSpecialQualifications.map((qual, idx) => (
+              <div key={idx} className="bg-amber-50 border-2 border-amber-200 rounded-lg p-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <div className="flex items-center justify-center w-6 h-6 bg-amber-100 rounded-full">
+                        <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <span className="text-sm font-bold text-amber-800">
+                        {qual.type}{qual.segment ? ` - ${qual.segment}` : ''}
+                      </span>
+                      <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-semibold rounded uppercase">
+                        {qual.status}
+                      </span>
+                    </div>
+                    <div className="ml-8 space-y-1">
+                      <div className="text-xs text-gray-700">
+                        <span className="font-semibold">Website:</span> {qual.website}
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        <span className="font-semibold">Submitted:</span> {qual.submittedDate}
+                      </div>
+                      <div className="text-xs text-amber-700 mt-2 font-medium">
+                        ⏳ Microsoft is reviewing your qualification request. This typically takes 5-7 business days.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!showSpecialQualificationForm && pendingSpecialQualifications.length === 0 ? (
+          <div className="text-sm text-gray-600 text-center py-4">
+            Click "New" to request a Special Qualification from Microsoft
+          </div>
+        ) : showSpecialQualificationForm ? (
+        <div className="space-y-4">
+          {/* Qualification Type Dropdown */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <span className="text-red-500 mr-1">*</span>
+              Special Qualification
+            </label>
+            <select
+              value={specialQualification}
+              onChange={(e) => {
+                setSpecialQualification(e.target.value);
+                setSpecialQualificationSegment('');
+                setSpecialQualificationWebsite('');
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            >
+              <option value="">Select</option>
+              <option value="Education">Education</option>
+              <option value="Government Community Cloud">Government Community Cloud</option>
+              <option value="State Owned Entity">State Owned Entity</option>
+            </select>
+          </div>
+
+          {/* Segment Dropdown (only show for Education) */}
+          {specialQualification === 'Education' && (
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <span className="text-red-500 mr-1">*</span>
+                Segment
+              </label>
+              <select
+                value={specialQualificationSegment}
+                onChange={(e) => setSpecialQualificationSegment(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              >
+                <option value="">Select</option>
+                <option value="K-12">K-12</option>
+                <option value="Higher Education">Higher Education</option>
+              </select>
+            </div>
+          )}
+
+          {/* Website Field */}
+          {specialQualification && (
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {specialQualification === 'Education' && <span className="text-red-500 mr-1">*</span>}
+                Website
+              </label>
+              <input
+                type="url"
+                value={specialQualificationWebsite}
+                onChange={(e) => setSpecialQualificationWebsite(e.target.value)}
+                placeholder="https://example.com"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              />
+            </div>
+          )}
+
+          {/* Information Box */}
+          {specialQualification && (
+            <div className="bg-blue-50 border border-blue-200 rounded p-3">
+              <div className="flex items-start">
+                <svg className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div className="text-xs text-blue-800">
+                  {specialQualification === 'Education' && (
+                    <div>
+                      <span className="font-semibold">Education Qualification:</span> Microsoft will verify your organization's educational status. This process typically takes 5-7 business days. Upon approval, you'll gain access to special academic pricing and programs.
+                    </div>
+                  )}
+                  {specialQualification === 'Government Community Cloud' && (
+                    <div>
+                      <span className="font-semibold">Government Community Cloud:</span> This qualification is for US government organizations at the federal, state, local, or tribal level. Microsoft will verify your government entity status before granting access to GCC services.
+                    </div>
+                  )}
+                  {specialQualification === 'State Owned Entity' && (
+                    <div>
+                      <span className="font-semibold">State Owned Entity:</span> This qualification is for government-controlled organizations and state-owned enterprises. Microsoft will review your organization's ownership structure and governmental affiliation.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-3 pt-2">
+            <button
+              onClick={() => {
+                if (isSpecialQualificationFormValid()) {
+                  // Add to pending qualifications
+                  const newQualification = {
+                    type: specialQualification,
+                    segment: specialQualificationSegment || undefined,
+                    website: specialQualificationWebsite,
+                    status: 'pending' as const,
+                    submittedDate: new Date().toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'short', 
+                      day: 'numeric' 
+                    })
+                  };
+                  setPendingSpecialQualifications(prev => [...prev, newQualification]);
+                  
+                  notifications.show({
+                    title: 'Request Submitted',
+                    message: `Your ${specialQualification} qualification request has been submitted to Microsoft for review.`,
+                    color: 'blue',
+                  });
+                  
+                  // Clear form
+                  setSpecialQualification('');
+                  setSpecialQualificationSegment('');
+                  setSpecialQualificationWebsite('');
+                  setShowSpecialQualificationForm(false);
+                }
+              }}
+              disabled={!isSpecialQualificationFormValid()}
+              className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
+                isSpecialQualificationFormValid()
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              Submit to Microsoft
+            </button>
+            <button
+              onClick={() => {
+                setSpecialQualification('');
+                setSpecialQualificationSegment('');
+                setSpecialQualificationWebsite('');
+                setShowSpecialQualificationForm(false);
+              }}
+              className="px-4 py-2 text-gray-700 hover:text-gray-900 text-sm font-medium"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+        ) : null}
+      </ExpandableSection>
+
+      {/* Azure Settings - For End Customers */}
+      <ExpandableSection
+        title="Azure Cost Management"
+        defaultOpen={false}
+        className="mb-4 bg-white border border-gray-200 rounded-lg shadow p-4"
+        helpContent="Monitor your Azure consumption and costs. Track spending patterns, set budgets, and receive alerts to optimize your cloud spending."
+      >
+        {/* Azure Plan Status */}
+        <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-3 mb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-sm font-bold text-blue-800">Azure Plan Active</div>
+                <div className="text-xs text-blue-600">Subscription ID: {tenantData.tenantId.substring(0, 8)}...</div>
+              </div>
+            </div>
+            <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">Active</span>
+          </div>
+        </div>
+
+        {/* Cost Summary */}
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          <div className="bg-white border border-blue-200 rounded-lg p-3">
+            <div className="text-xs text-gray-600 mb-1">Today</div>
+            <div className="text-lg font-bold text-gray-800">$42.15</div>
+            <div className="text-xs text-gray-500 mt-1">+$12.45 from yesterday</div>
+          </div>
+          <div className="bg-white border border-blue-200 rounded-lg p-3">
+            <div className="text-xs text-gray-600 mb-1">This Month (MTD)</div>
+            <div className="text-lg font-bold text-gray-800">$892.47</div>
+            <div className="text-xs text-gray-500 mt-1">Projected: $1,245</div>
+          </div>
+          <div className="bg-white border border-blue-200 rounded-lg p-3">
+            <div className="text-xs text-gray-600 mb-1">Budget Alert</div>
+            <div className="text-lg font-bold text-amber-600">72%</div>
+            <div className="text-xs text-amber-600 mt-1 font-medium">Budget: $1,500</div>
+          </div>
+        </div>
+
+        {/* Cost Management Settings */}
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+          <h4 className="text-sm font-bold text-gray-800 mb-3">Cost Management Settings</h4>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs font-semibold text-gray-700">Monthly Budget</div>
+                <div className="text-xs text-gray-600">Alert when 80% reached</div>
+              </div>
+              <span className="text-sm font-bold text-gray-800">$1,500.00</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs font-semibold text-gray-700">Daily Spending Limit</div>
+                <div className="text-xs text-gray-600">Suspend services if exceeded</div>
+              </div>
+              <span className="text-sm font-bold text-gray-800">$75.00</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs font-semibold text-gray-700">Cost Alerts</div>
+                <div className="text-xs text-gray-600">Email notifications enabled</div>
+              </div>
+              <span className="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-semibold rounded uppercase">Enabled</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs font-semibold text-gray-700">Auto-shutdown VMs</div>
+                <div className="text-xs text-gray-600">Non-production at 7 PM daily</div>
+              </div>
+              <span className="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-semibold rounded uppercase">Enabled</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Top Azure Services by Cost */}
+        <div className="mt-4">
+          <h4 className="text-sm font-bold text-gray-800 mb-2">Top Services by Cost (This Month)</h4>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between bg-white border border-gray-200 rounded p-2">
+              <div className="flex-1">
+                <div className="text-xs font-semibold text-gray-700">Virtual Machines</div>
+                <div className="text-xs text-gray-500">3 instances running</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-bold text-gray-800">$445.20</div>
+                <div className="text-xs text-gray-500">49.9%</div>
+              </div>
+            </div>
+            <div className="flex items-center justify-between bg-white border border-gray-200 rounded p-2">
+              <div className="flex-1">
+                <div className="text-xs font-semibold text-gray-700">Storage Accounts</div>
+                <div className="text-xs text-gray-500">1.2 TB stored</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-bold text-gray-800">$287.15</div>
+                <div className="text-xs text-gray-500">32.2%</div>
+              </div>
+            </div>
+            <div className="flex items-center justify-between bg-white border border-gray-200 rounded p-2">
+              <div className="flex-1">
+                <div className="text-xs font-semibold text-gray-700">App Services</div>
+                <div className="text-xs text-gray-500">5 web apps</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-bold text-gray-800">$160.12</div>
+                <div className="text-xs text-gray-500">17.9%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ExpandableSection>
+      </>
+      ) : null}
 
       {/* Reseller View - Show Partner Centre Insights and GDAP */}
       {partnerInfo.isReseller && partnerInfo.isConfigured ? (
-        <div className="bg-white border border-gray-200 rounded-lg shadow p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 pb-3 border-b border-gray-200">Reseller Management</h3>
+        <>
+          {/* Customer Tenant Information - For Resellers */}
+          <ExpandableSection
+            title="Customer Tenant Information"
+            defaultOpen={true}
+            className="mb-4 bg-white border border-gray-200 rounded-lg shadow p-4"
+            helpContent="Customer Tenant Information displays details about your end-customers' Microsoft 365 tenants, including domain information, authorization status, and reseller of record details."
+          >
+            <div className="space-y-2">
+              {endCustomers.map((customer) => (
+                <ExpandableSection
+                  key={customer.id}
+                  title={
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-gray-800">{customer.companyName}</span>
+                        <span className="text-xs text-gray-500 mt-1">{customer.domain}</span>
+                      </div>
+                    </div>
+                  }
+                  defaultOpen={false}
+                  className="bg-white border border-gray-200"
+                >
+                  <div className="space-y-2">
+                    {/* Customer Tenant Information Card */}
+                    <div className="flex items-center justify-between bg-gray-50 border-2 border-gray-300 rounded-lg p-2">
+                      <div className="flex items-center">
+                        <div className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full mr-2">
+                          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="text-xs font-medium text-gray-700 uppercase tracking-wide">Customer Tenant Information</div>
+                          <div className="text-sm font-bold text-gray-900 mt-0.5">{customer.domain}</div>
+                          <div className="text-xs text-gray-600 font-mono mt-0.5">Tenant ID: {customer.tenantId}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* MCA Authorization Status */}
+                    <div className="flex items-center justify-between bg-green-50 border-2 border-green-300 rounded-lg p-2">
+                      <div className="flex items-center">
+                        <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full mr-2">
+                          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="text-xs font-medium text-green-700 uppercase tracking-wide">MCA Authorization Status</div>
+                          <div className="text-lg font-bold text-green-800">VALID</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Reseller of Record (MPN ID) */}
+                    <div className="flex items-center justify-between bg-blue-50 border-2 border-blue-300 rounded-lg p-2">
+                      <div className="flex items-center">
+                        <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full mr-2">
+                          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="text-xs font-medium text-blue-700 uppercase tracking-wide">Reseller of Record (MPN ID)</div>
+                          <div className="text-lg font-bold text-blue-800 font-mono">{partnerInfo.mpnId}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ExpandableSection>
+              ))}
+            </div>
+          </ExpandableSection>
           
           {/* GDAP Relationships for Resellers */}
           <ExpandableSection
@@ -1848,7 +2746,7 @@ Best regards,
             }
             open={gdapSectionOpen}
             onToggle={setGdapSectionOpen}
-            className="mb-3 bg-gray-100 border border-gray-300 rounded-lg p-4"
+            className="mb-4 bg-white border border-gray-200 rounded-lg shadow p-4"
             helpContent="GDAP (Granular Delegated Admin Privileges) Relationships with your end-customers. These define the specific permissions your organization has to manage each customer's Microsoft 365 environment, including user management, license assignment, and security settings."
           >
             {gdapRelationships.map((rel, idx) => (
@@ -1915,7 +2813,7 @@ Best regards,
             title="Partner Centre Insights" 
             sectionId="microsoft-partner-insights"
             defaultOpen={true}
-            className="mb-3 bg-gray-100 border border-gray-300 rounded-lg p-4"
+            className="mb-4 bg-white border border-gray-200 rounded-lg shadow p-4"
             helpContent="Comprehensive analytics and metrics from Microsoft Partner Center about your end-customers' Microsoft 365 usage, deployment, subscriptions, and revenue. Use these insights to understand customer engagement, identify optimization opportunities, and track revenue performance."
           >
             {/* Overview Metrics */}
@@ -1983,7 +2881,10 @@ Best regards,
                       <div className="flex items-center space-x-3">
                         <div className="text-right">
                           <div className="text-sm font-semibold text-gray-700">${customer.monthlyRevenue.toLocaleString('en-US', {minimumFractionDigits: 2})}/mo</div>
-                          <div className="text-xs text-gray-500">{customer.totalSeats} seats</div>
+                          <div className="text-xs">
+                            <span className="text-gray-500">{customer.totalSeats} seats | </span>
+                            <span className={getMarginColor(customer.marginPercent)}>{customer.marginPercent}% margin</span>
+                          </div>
                         </div>
                         <span className={`text-xs font-bold uppercase rounded px-2 py-1 ${getStatusColor(customer.status)}`}>
                           {customer.status === 'good' ? '✓' : customer.status === 'warning' ? '⚠' : '⚠'}
@@ -2027,7 +2928,10 @@ Best regards,
                     <div className="bg-gray-50 rounded p-3">
                       <div className="text-xs text-gray-600 mb-1">Monthly Revenue</div>
                       <div className="text-lg font-bold text-gray-800">${customer.monthlyRevenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
-                      <div className="text-xs text-gray-600 mt-1">{customer.subscriptions.length} subscription(s)</div>
+                      <div className="text-xs mt-1">
+                        <span className="text-gray-600">{customer.subscriptions.length} subscription(s) | </span>
+                        <span className={getMarginColor(customer.marginPercent)}>{customer.marginPercent}% margin</span>
+                      </div>
                     </div>
                   </div>
 
@@ -2035,33 +2939,126 @@ Best regards,
                   <div className="mb-4">
                     <div className="text-sm font-semibold text-gray-700 mb-2">Active Subscriptions</div>
                     <div className="space-y-2">
-                      {customer.subscriptions.map((sub, idx) => (
-                        <div key={idx} className="bg-gray-50 border border-gray-200 rounded p-3">
-                          <div className="flex items-center justify-between mb-2">
+                      {customer.subscriptions.map((sub, idx) => {
+                        const assignedPercentage = (sub.assigned / sub.seats) * 100;
+                        const activePercentage = (sub.active / sub.assigned) * 100;
+                        
+                        // Helper function to get color classes for percentages
+                        const getPercentageColor = (percentage: number, type: 'assigned' | 'active') => {
+                          if (type === 'assigned') {
+                            if (percentage >= 90) return 'text-green-700 font-semibold';
+                            if (percentage >= 75) return 'text-yellow-700 font-semibold';
+                            return 'text-red-700 font-semibold';
+                          } else { // active
+                            if (percentage >= 80) return 'text-green-700 font-semibold';
+                            if (percentage >= 60) return 'text-yellow-700 font-semibold';
+                            return 'text-red-700 font-semibold';
+                          }
+                        };
+                        
+                        return (
+                          <ExpandableSection
+                            key={idx}
+                            title={
+                              <div className="flex items-center justify-between w-full">
                             <span className="text-sm font-medium text-gray-800">{sub.name}</span>
+                                <div className="flex items-center space-x-3">
+                                  <div className="text-right flex flex-col">
                             <span className="text-sm font-semibold text-gray-700">${sub.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}/mo</span>
+                                    <span className="text-xs">
+                                      <span className="text-gray-600">{sub.seats} seats | </span>
+                                      <span className={getMarginColor(sub.marginPercent)}>{sub.marginPercent}% margin</span>
+                                    </span>
                           </div>
-                          <div className="mb-2">
+                                </div>
+                              </div>
+                            }
+                            defaultOpen={false}
+                            className="bg-gray-50 border border-gray-200"
+                          >
+                            {/* Overall Subscription Stats */}
+                            <div className="grid grid-cols-3 gap-3 text-xs mb-3 pb-3 border-b border-gray-300">
+                              <div className="bg-white rounded p-2">
+                                <span className="text-gray-600 font-medium block mb-1">Total Seats</span>
+                                <span className="text-lg font-bold text-gray-800">{sub.seats}</span>
+                              </div>
+                              <div className="bg-white rounded p-2">
+                                <span className="text-gray-600 font-medium block mb-1">Assigned</span>
+                                <div className="flex items-baseline space-x-1">
+                                  <span className="text-lg font-bold text-gray-800">{sub.assigned}</span>
+                                  <span className={getPercentageColor(assignedPercentage, 'assigned')}>
+                                    ({assignedPercentage.toFixed(0)}%)
+                                  </span>
+                                </div>
+                                {assignedPercentage < 90 && (
+                                  <div className={`text-xs mt-1 ${assignedPercentage < 75 ? 'text-red-600' : 'text-yellow-600'}`}>
+                                    {assignedPercentage < 75 ? '⚠️ High waste risk' : '⚠️ Unused licenses'}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="bg-white rounded p-2">
+                                <span className="text-gray-600 font-medium block mb-1">Active (28d)</span>
+                                <div className="flex items-baseline space-x-1">
+                                  <span className="text-lg font-bold text-gray-800">{sub.active}</span>
+                                  <span className={getPercentageColor(activePercentage, 'active')}>
+                                    ({activePercentage.toFixed(0)}%)
+                                  </span>
+                                </div>
+                                {activePercentage < 80 && (
+                                  <div className={`text-xs mt-1 ${activePercentage < 60 ? 'text-red-600' : 'text-yellow-600'}`}>
+                                    {activePercentage < 60 ? '⚠️ Incentive risk' : '⚠️ Low adoption'}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Term Type Breakdown */}
+                            <div className="text-xs font-medium text-gray-600 mb-2">Term Type Breakdown ({sub.termTypes.length} types):</div>
+                            <div className="space-y-2">
+                              {sub.termTypes.map((termType, termIdx) => {
+                                const termAssignedPct = (termType.assigned / termType.seats) * 100;
+                                const termActivePct = (termType.active / termType.assigned) * 100;
+                                
+                                return (
+                                  <div key={termIdx} className="bg-white border border-gray-200 rounded p-2">
+                                    <div className="flex items-center justify-between mb-2">
                             <span className={`inline-block text-xs font-medium px-2 py-1 rounded ${
-                              sub.termType === 'Annual billed Monthly' ? 'bg-blue-100 text-blue-700' :
-                              sub.termType === 'Triannual Upfront' ? 'bg-purple-100 text-purple-700' :
-                              sub.termType === 'Annual Upfront' ? 'bg-indigo-100 text-indigo-700' :
+                                        termType.type === 'Annual billed Monthly' ? 'bg-blue-100 text-blue-700' :
+                                        termType.type === 'Triannual Upfront' ? 'bg-purple-100 text-purple-700' :
+                                        termType.type === 'Annual Upfront' ? 'bg-indigo-100 text-indigo-700' :
                               'bg-green-100 text-green-700'
-                            }`}>{sub.termType}</span>
+                                      }`}>{termType.type}</span>
+                                      <div className="text-right">
+                                        <div className="text-xs font-semibold text-gray-700">${termType.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}/mo</div>
+                                        <div className="text-xs">
+                                          <span className={getMarginColor(termType.marginPercent)}>{termType.marginPercent}% margin</span>
                           </div>
-                          <div className="grid grid-cols-3 gap-2 text-xs text-gray-600">
+                                      </div>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2 text-xs text-gray-500">
                             <div>
-                              <span className="font-medium">Seats:</span> {sub.seats}
+                                        <span className="font-medium">Seats:</span> {termType.seats}
                             </div>
                             <div>
-                              <span className="font-medium">Assigned:</span> {sub.assigned} ({((sub.assigned/sub.seats)*100).toFixed(0)}%)
+                                        <span className="font-medium">Assigned:</span> {termType.assigned} 
+                                        <span className={` ml-1 ${getPercentageColor(termAssignedPct, 'assigned')}`}>
+                                          ({termAssignedPct.toFixed(0)}%)
+                                        </span>
                             </div>
                             <div>
-                              <span className="font-medium">Active:</span> {sub.active} ({((sub.active/sub.assigned)*100).toFixed(0)}%)
+                                        <span className="font-medium">Active:</span> {termType.active} 
+                                        <span className={` ml-1 ${getPercentageColor(termActivePct, 'active')}`}>
+                                          ({termActivePct.toFixed(0)}%)
+                                        </span>
                             </div>
                           </div>
                         </div>
-                      ))}
+                                );
+                              })}
+                            </div>
+                          </ExpandableSection>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -2112,7 +3109,7 @@ Best regards,
             title="Azure Cost Management" 
             sectionId="microsoft-azure-cost-mgmt"
             defaultOpen={true}
-            className="mb-3 bg-gray-100 border border-gray-300 rounded-lg p-4"
+            className="mb-4 bg-white border border-gray-200 rounded-lg shadow p-4"
             helpContent="Monitor Azure spending for customers with active Azure Plans. Track daily costs, monthly projections, and cost management thresholds to ensure customers stay within budget and avoid unexpected charges."
           >
             {/* Summary Cards */}
@@ -2263,454 +3260,9 @@ Best regards,
               </div>
             </div>
           </ExpandableSection>
-        </div>
-      ) : !partnerInfo.isReseller && isTenantLinked ? (
-        <>
-          {/* Section 1: Customer Tenant Information - For End-Customers Only */}
-          <ExpandableSection 
-            title="Customer Tenant Information" 
-            sectionId="microsoft-tenant-info" 
-            className="bg-gray-100 border border-gray-300 rounded-lg p-4"
-            helpContent="Customer Tenant Information displays details about your connected Microsoft 365 or Azure tenant, including domain information, admin users, and relationship status. This data is essential for managing licenses and user access."
-          >
-            {/* Tenant Domain Subsection */}
-            <ExpandableSection 
-              title="Tenant Domain Details" 
-              open={tenantDomainSectionOpen}
-              onToggle={setTenantDomainSectionOpen}
-              className="mb-3"
-              helpContent="Tenant Domain Details shows your organization's primary domain and tenant ID information. This includes the domain used for user authentication, email addresses, and Microsoft 365 services. The tenant ID is a unique identifier for your organization in Microsoft's cloud."
-            >
-              <div className="flex items-center mb-6">
-                <img src={microsoftLogo} alt="Microsoft Logo" className="w-16 h-16 mr-4 rounded" />
-                <div>
-                  <div className="text-lg font-bold text-gray-800">AppDirect Demonstration 5</div>
-                  <div className="text-xs text-gray-500 font-mono">{tenantData.tenantId}</div>
-                </div>
-              </div>
-              <div className="mb-4 py-2">
-                <div className="flex items-center justify-between mb-1">
-                  <div className="font-semibold text-gray-700">{tenantData.domain}</div>
-                  <span className="text-xs font-bold uppercase text-green-700 bg-green-100 rounded px-2 py-1">Active</span>
-                </div>
-                <div className="text-xs text-gray-500 mb-2">Tenant UUID: {tenantData.tenantId}</div>
-                <div className="flex justify-end">
-                  <button 
-                    className="px-3 py-1 text-xs rounded border border-red-300 bg-red-50 text-red-700 hover:bg-red-100"
-                    onClick={handleUnlinkTenant}
-                  >
-                    Unlink Tenant
-                  </button>
-                </div>
-              </div>
-            </ExpandableSection>
-
-            {/* Admin Subsection - Only for non-resellers */}
-            {!partnerInfo.isReseller && (
-            <ExpandableSection 
-              title="Administration Information" 
-              open={adminSectionOpen}
-              onToggle={setAdminSectionOpen}
-              className="mb-3"
-              helpContent="Administration Information displays the users with administrative privileges in your Microsoft 365 tenant. This includes Global Administrators who have full control, Billing Administrators who manage subscriptions, and the status of your Microsoft Customer Agreement which governs your relationship with Microsoft."
-            >
-              <div className="mb-4 py-2">
-                <div className="font-semibold text-gray-700 mb-2">Global Admin User(s)</div>
-                <ul className="text-sm text-gray-700 space-y-1 mb-3">
-                  {tenantData.globalAdmins.map((admin, index) => (
-                    <li key={index} className="flex items-center">
-                      <span className="mr-2 text-green-400">•</span>
-                      {admin}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="mb-4 py-2">
-                <div className="font-semibold text-gray-700 mb-2">Billing Admin User(s)</div>
-                <ul className="text-sm text-gray-700 space-y-1 mb-3">
-                  {tenantData.billingAdmins.map((admin, index) => (
-                    <li key={index} className="flex items-center">
-                      <span className="mr-2 text-green-400">•</span>
-                      {admin}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mb-4 py-2">
-                <div className="font-semibold text-gray-700 mb-1">Microsoft Customer Agreement Status</div>
-                <ul className="text-sm text-gray-700 space-y-1 mb-2">
-                  <li className="flex items-center justify-between">
-                    <span className="flex items-center">
-                      <span className="mr-2 text-green-400">•</span>
-                      Last Agreement Date: {tenantData.agreementDate}
-                    </span>
-                    <span className="text-xs font-bold uppercase text-green-700 bg-green-100 rounded px-2 py-1">Active</span>
-                  </li>
-                </ul>
-              </div>
-            </ExpandableSection>
-            )}
-
-            {/* GDAP Relationships Subsection */}
-            <ExpandableSection
-              title={
-                <div className="flex items-center w-full">
-                  <span className="flex-1">{partnerInfo.isReseller ? 'End-Customer GDAP Relationships' : 'GDAP Relationships'}</span>
-                  <div className="flex items-center space-x-2">
-                    <ActionButton onClick={handleGdapNew}>New</ActionButton>
-                    <ActionButton onClick={handleGdapSync}>Sync</ActionButton>
-                  </div>
-                </div>
-              }
-              open={gdapSectionOpen}
-              onToggle={setGdapSectionOpen}
-              className="mb-3"
-              helpContent={partnerInfo.isReseller 
-                ? "GDAP (Granular Delegated Admin Privileges) Relationships with your end-customers. These define the specific permissions your organization has to manage each customer's Microsoft 365 environment, including user management, license assignment, and security settings." 
-                : "GDAP (Granular Delegated Admin Privileges) Relationships define the specific permissions your organization has to manage your customer's Microsoft 365 environment. These relationships specify which administrative roles you can perform, such as user management, license assignment, and security settings. Each relationship has a defined scope and expiration date."}
-            >
-              {gdapRelationships.map((rel, idx) => (
-                <ExpandableSection
-                  key={rel.name}
-                  title={
-                    <div className="flex items-center justify-between w-full">
-                      <div className="flex flex-col">
-                        <span className="font-medium">{rel.name}</span>
-                        {partnerInfo.isReseller && rel.customerName && (
-                          <span className="text-xs text-gray-600 mt-1">
-                            Customer: {rel.customerName} ({rel.customerDomain})
-                          </span>
-                        )}
-                      </div>
-                      {rel.active ? (
-                        <span className="text-xs font-bold uppercase text-green-700 bg-green-100 rounded px-2 py-1 ml-2">Active</span>
-                      ) : (
-                        <span className="text-xs font-bold uppercase text-yellow-700 bg-yellow-100 rounded px-2 py-1 ml-2">Pending</span>
-                      )}
-                    </div>
-                  }
-                  defaultOpen={false}
-                  className="mb-3 ml-4 border border-gray-200 bg-gray-50"
-                >
-                  {rel.name.startsWith('Default_') ? (
-                    <div className="text-xs text-gray-600 mb-2">This is a Default GDAP relationship and assigned when the tenant was created.</div>
-                  ) : !rel.active ? (
-                    <div className="text-xs text-gray-600 mb-2">This GDAP relationship request has been sent to the customer and is awaiting approval.</div>
-                  ) : (
-                    <div className="text-xs text-gray-600 mb-2">This GDAP relationship was explicitly requested by &lt;partner&gt; and accepted by the customer.</div>
-                  )}
-                  <div className="text-xs text-gray-500 mb-2">
-                    {!rel.active ? (
-                      'Request sent to customer - awaiting approval'
-                    ) : rel.autoExtend ? (
-                      `Relationship is valid from ${rel.dateRange.split(' - ')[0]} to ${rel.dateRange.split(' - ')[1]}`
-                    ) : (
-                      `Relationship is valid from ${rel.dateRange.split(' - ')[0]} to ${rel.dateRange.split(' - ')[1]} and will NOT renew`
-                    )}
-                  </div>
-                  {rel.active && (
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex-1"></div>
-                      <div className="flex items-center">
-                        <span className="text-xs text-gray-700 mr-2">Renew every 180 days</span>
-                        <Toggle enabled={rel.autoExtend} onChange={(val) => handleAutoExtendToggle(idx, val)} size="sm" />
-                      </div>
-                    </div>
-                  )}
-                  <ul className="text-xs text-gray-700 space-y-1">
-                    {rel.roles.map((role) => (
-                      <li key={role} className="flex items-center py-2">
-                        <span className="mr-2 text-green-400">✔</span> {role}
-                      </li>
-                    ))}
-                  </ul>
-                </ExpandableSection>
-              ))}
-            </ExpandableSection>
-
-            {/* Special Qualifications Subsection - Only for non-resellers */}
-            {!partnerInfo.isReseller && (
-            <ExpandableSection
-              title={
-                <div className="flex items-center w-full">
-                  <span className="flex-1">Special Qualification Status</span>
-                  <div className="flex items-center space-x-2">
-                    <ActionButton onClick={handleQualificationNew}>New</ActionButton>
-                    <ActionButton onClick={handleSpecialQualificationsSync}>Sync</ActionButton>
-                  </div>
-                </div>
-              }
-              open={specialQualificationsSectionOpen}
-              onToggle={setSpecialQualificationsSectionOpen}
-              className="mb-3"
-              helpContent="Special Qualification Status shows your organization's eligibility for specific Microsoft programs and benefits. These qualifications can include government contracts, educational status, nonprofit status, or other specialized programs that provide additional benefits, discounts, or access to specific Microsoft services and features."
-            >
-              {specialQualifications.map((qual, idx) => (
-                <div key={`${qual.name}-${qual.domain}-${idx}`} className="mb-3 py-2">
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="font-semibold text-gray-700">{qual.name}</div>
-                    {qual.active ? (
-                      <span className="text-xs font-bold uppercase text-green-700 bg-green-100 rounded px-2 py-1">Active</span>
-                    ) : (
-                      <span className="text-xs font-bold uppercase text-yellow-700 bg-yellow-100 rounded px-2 py-1">Pending</span>
-                    )}
-                  </div>
-                  {!qual.active && (
-                    <div className="text-xs text-gray-600 mb-1">Domain: {qual.domain}</div>
-                  )}
-                  <div className="text-xs text-gray-500">
-                    {!qual.active ? (
-                      'Request sent to Microsoft - awaiting approval'
-                    ) : (
-                      `Last modified on ${qual.lastModified}`
-                    )}
-                  </div>
-                </div>
-              ))}
-            </ExpandableSection>
-            )}
-
-            {/* Azure Subsection - Only for non-resellers */}
-            {!partnerInfo.isReseller && (
-            <ExpandableSection 
-              title="Azure Settings" 
-              sectionId="microsoft-azure-settings"
-              className="mb-3"
-              helpContent="Azure Settings configure permissions and access levels for Azure services, including reservations, cost management, and subscription usage. These settings determine what Azure resources your organization can manage and purchase."
-            >
-              <div className="mb-4 py-2">
-                <div className="font-semibold text-gray-700 mb-1">Microsoft Purchase Permissions</div>
-                <div className="bg-gray-50 border border-gray-200 rounded p-3 flex items-center justify-between">
-                  <div>
-                    <div className="font-semibold text-xs">Azure Reservations</div>
-                    <div className="text-xs text-gray-500">Enabling this setting allows customers to purchase Azure Reservations. Please follow the guidelines before you enable this feature for your customer.</div>
-                  </div>
-                  <div className="flex items-center">
-                    <Toggle enabled={azureReservations} onChange={setAzureReservations} size="sm" />
-                    <span className={`text-xs ml-2 ${azureReservations ? 'text-green-700' : 'text-gray-400 opacity-60'}`}>{azureReservations ? 'Enabled' : 'Disabled'}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-4 py-2">
-                <div className="font-semibold text-gray-700 mb-1">Microsoft Cost Management</div>
-                <div className="bg-gray-50 border border-gray-200 rounded p-3 flex items-center justify-between">
-                  <div>
-                    <div className="font-semibold text-xs">Azure Subscription Usage</div>
-                    <div className="text-xs text-gray-500">Enabling this setting updates the customer's billing policy to allow users with the proper role and access to the subscription, visibility into their consumption and the associated retail pay-as-you-go rates in the Azure portal.</div>
-                  </div>
-                  <div className="flex items-center">
-                    <Toggle enabled={azureUsage} onChange={setAzureUsage} size="sm" />
-                    <span className={`text-xs ml-2 ${azureUsage ? 'text-green-700' : 'text-gray-400 opacity-60'}`}>{azureUsage ? 'Enabled' : 'Disabled'}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-4 py-2">
-                <div className="font-semibold text-gray-700 mb-1">Azure Management Permissions</div>
-                <div className="bg-gray-50 border border-gray-200 rounded p-3">
-                  <div className="text-xs text-gray-500 mb-3">Partners are required to have certain permissions to manage customers with Azure subscriptions.</div>
-                  <AzureManagementPermissions />
-                </div>
-              </div>
-            </ExpandableSection>
-            )}
-
-            {/* Partner Centre Insights - For both Resellers and End-Customers */}
-            {!partnerInfo.isReseller && (
-            <ExpandableSection 
-              title="Partner Centre Insights" 
-              sectionId="microsoft-partner-insights-customer"
-              defaultOpen={true}
-              className="mb-3"
-              helpContent="Comprehensive analytics and metrics from Microsoft Partner Center about your Microsoft 365 usage, deployment, subscriptions, and spending. Use these insights to understand user engagement, identify optimization opportunities, and track license utilization."
-            >
-              {/* Overview Metrics */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-medium text-blue-700 uppercase">Total Seats</span>
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                  </div>
-                  <div className="text-2xl font-bold text-blue-800">150</div>
-                  <div className="text-xs text-blue-600 mt-1">Microsoft 365 licenses</div>
-                </div>
-                
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-medium text-green-700 uppercase">Assigned Seats</span>
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div className="text-2xl font-bold text-green-800">142</div>
-                  <div className="text-xs text-green-600 mt-1">94.7% deployment</div>
-                </div>
-                
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-medium text-purple-700 uppercase">Active Users</span>
-                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                  </div>
-                  <div className="text-2xl font-bold text-purple-800">118</div>
-                  <div className="text-xs text-purple-600 mt-1">83.1% usage (28 days)</div>
-                </div>
-                
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-medium text-amber-700 uppercase">Monthly Cost</span>
-                    <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div className="text-2xl font-bold text-amber-800">$1,950.00</div>
-                  <div className="text-xs text-amber-600 mt-1">Total subscription cost</div>
-                </div>
-              </div>
-
-              {/* Subscription Details */}
-              <div className="mb-4">
-                <div className="text-sm font-semibold text-gray-700 mb-3">Active Subscriptions</div>
-                <div className="space-y-3">
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-800">Microsoft 365 Business Premium</span>
-                      <span className="text-sm font-semibold text-gray-700">$1,200.00/mo</span>
-                    </div>
-                    <div className="mb-3">
-                      <span className="inline-block text-xs font-medium px-2 py-1 bg-blue-100 text-blue-700 rounded">Annual billed Monthly</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="bg-white rounded p-3">
-                        <div className="text-xs text-gray-600 mb-1">Deployment</div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-lg font-bold text-gray-800">96%</span>
-                          <span className="text-xs text-gray-600">96/100</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full bg-green-600" style={{ width: '96%' }}></div>
-                        </div>
-                      </div>
-                      <div className="bg-white rounded p-3">
-                        <div className="text-xs text-gray-600 mb-1">Usage (28 days)</div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-lg font-bold text-gray-800">85%</span>
-                          <span className="text-xs text-gray-600">82/96</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full bg-green-600" style={{ width: '85%' }}></div>
-                        </div>
-                      </div>
-                      <div className="bg-white rounded p-3">
-                        <div className="text-xs text-gray-600 mb-1">Status</div>
-                        <div className="text-sm font-semibold text-green-700">Active</div>
-                        <div className="text-xs text-gray-500 mt-1">Renews: Dec 15, 2025</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-800">Office 365 E3</span>
-                      <span className="text-sm font-semibold text-gray-700">$600.00/mo</span>
-                    </div>
-                    <div className="mb-3">
-                      <span className="inline-block text-xs font-medium px-2 py-1 bg-purple-100 text-purple-700 rounded">Triannual Upfront</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="bg-white rounded p-3">
-                        <div className="text-xs text-gray-600 mb-1">Deployment</div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-lg font-bold text-gray-800">92%</span>
-                          <span className="text-xs text-gray-600">46/50</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full bg-green-600" style={{ width: '92%' }}></div>
-                        </div>
-                      </div>
-                      <div className="bg-white rounded p-3">
-                        <div className="text-xs text-gray-600 mb-1">Usage (28 days)</div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-lg font-bold text-gray-800">78%</span>
-                          <span className="text-xs text-gray-600">36/46</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full bg-yellow-600" style={{ width: '78%' }}></div>
-                        </div>
-                      </div>
-                      <div className="bg-white rounded p-3">
-                        <div className="text-xs text-gray-600 mb-1">Status</div>
-                        <div className="text-sm font-semibold text-green-700">Active</div>
-                        <div className="text-xs text-gray-500 mt-1">Renews: Jan 8, 2026</div>
-                      </div>
-                    </div>
-                    <div className="mt-3 bg-yellow-50 border border-yellow-200 rounded p-3">
-                      <div className="text-xs font-medium text-yellow-800 mb-1">💡 Recommendation</div>
-                      <div className="text-xs text-yellow-700">Usage below 80%. Consider training programs to increase user engagement and maximize ROI.</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-800">Power BI Pro</span>
-                      <span className="text-sm font-semibold text-gray-700">$150.00/mo</span>
-                    </div>
-                    <div className="mb-3">
-                      <span className="inline-block text-xs font-medium px-2 py-1 bg-green-100 text-green-700 rounded">Monthly billed Monthly</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="bg-white rounded p-3">
-                        <div className="text-xs text-gray-600 mb-1">Deployment</div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-lg font-bold text-gray-800">100%</span>
-                          <span className="text-xs text-gray-600">15/15</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full bg-green-600" style={{ width: '100%' }}></div>
-                        </div>
-                      </div>
-                      <div className="bg-white rounded p-3">
-                        <div className="text-xs text-gray-600 mb-1">Usage (28 days)</div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-lg font-bold text-gray-800">100%</span>
-                          <span className="text-xs text-gray-600">15/15</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full bg-green-600" style={{ width: '100%' }}></div>
-                        </div>
-                      </div>
-                      <div className="bg-white rounded p-3">
-                        <div className="text-xs text-gray-600 mb-1">Status</div>
-                        <div className="text-sm font-semibold text-green-700">Active</div>
-                        <div className="text-xs text-gray-500 mt-1">Renews: Nov 20, 2025</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Data Attribution */}
-              <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600">
-                <div className="flex items-start">
-                  <svg className="w-4 h-4 text-gray-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    <strong>Data Source:</strong> Microsoft Partner Center Insights API | <strong>Updated:</strong> Daily | <strong>Usage Period:</strong> Last 28 days | 
-                    <a href="https://learn.microsoft.com/en-us/partner-center/develop/partner-center-analytics-resources" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline ml-1">
-                      Learn more about Partner Center Insights
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </ExpandableSection>
-            )}
-          </ExpandableSection>
         </>
+      ) : !partnerInfo.isReseller && isTenantLinked ? (
+        null
       ) : !partnerInfo.isReseller ? (
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
           <div className="text-lg font-semibold text-gray-700 mb-4">No tenant linked</div>
@@ -2756,79 +3308,14 @@ Best regards,
         isLoading={isConfiguring}
       />
 
-      {/* Partnership Invitation Modal */}
-      <PartnershipInviteModal
-        open={showPartnershipInviteModal}
-        onClose={() => setShowPartnershipInviteModal(false)}
-        partnerEmailInput={partnerEmailInput}
-        setPartnerEmailInput={setPartnerEmailInput}
-        onSend={handleSendPartnershipInvite}
-        onCopyLink={handleCopyInviteLink}
-        onCopyTemplate={handleCopyEmailTemplate}
-        relationshipId={distributorRelationshipId}
-      />
-
-      {/* Special Qualifications Options Modal */}
-      <QualificationOptionsModal
-        open={showQualificationOptions}
-        onClose={() => setShowQualificationOptions(false)}
-        onSelectOption={handleQualificationOptionSelect}
-      />
-
-      {/* Domain Input Modal */}
-      <DomainInputModal
-        open={showDomainInput}
-        onClose={() => setShowDomainInput(false)}
-        onConfirm={handleDomainSubmit}
-        selectedQualification={selectedQualification}
-      />
-
-      {/* Qualification Confirmation Modal */}
-      <QualificationConfirmationModal
-        open={showQualificationConfirmation}
-        onClose={() => setShowQualificationConfirmation(false)}
-        onConfirm={handleQualificationConfirm}
-        selectedQualification={selectedQualification}
-        domain={selectedDomain}
-      />
-
-      {/* GDAP Sync Modal */}
-      <SyncModal
-        open={showGdapSyncModal}
-        onClose={() => setShowGdapSyncModal(false)}
-        onConfirm={handleGdapSyncConfirm}
-        title="Syncing GDAP Relationships"
-        message="Now syncing GDAP relationships from Microsoft Partner Centre"
-      />
-
-      {/* Special Qualifications Sync Modal */}
-      <SyncModal
-        open={showSpecialQualificationsSyncModal}
-        onClose={() => setShowSpecialQualificationsSyncModal(false)}
-        onConfirm={handleSpecialQualificationsSyncConfirm}
-        title="Syncing Special Qualifications"
-        message="Now syncing Special Qualification statuses from Microsoft"
-      />
-
-      {/* Tenant Management Modals */}
-      <UnlinkWarningModal
-        open={showUnlinkWarning}
-        onClose={() => setShowUnlinkWarning(false)}
-        onConfirm={handleUnlinkConfirm}
-        confirmation={unlinkConfirmation}
-        onConfirmationChange={setUnlinkConfirmation}
-      />
-
-      <CreateTenantModal
-        open={showCreateTenantModal}
-        onClose={() => setShowCreateTenantModal(false)}
-        onConfirm={handleCreateTenantConfirm}
-      />
-
-      <LinkTenantModal
-        open={showLinkTenantModal}
-        onClose={() => setShowLinkTenantModal(false)}
-        onConfirm={handleLinkTenantConfirm}
+      {/* MCA Attestation Modal */}
+      <McaAttestationModal
+        open={showMcaModal}
+        onClose={() => setShowMcaModal(false)}
+        mcaSignatory={mcaSignatory}
+        setMcaSignatory={setMcaSignatory}
+        onSubmit={handleMcaSubmit}
+        isGenerateMode={mcaStatus === 'invalid'}
       />
     </div>
   );
