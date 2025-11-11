@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { SearchIcon, PlusIcon, BellIcon, Settings2Icon } from 'lucide-react'
 import { Avatar } from '../misc/Avatar'
 export const TopNavbar = () => {
@@ -10,10 +11,14 @@ export const TopNavbar = () => {
           <div className="flex items-center justify-center bg-blue-600 rounded-sm p-1">
             <span className="text-sm font-medium">Marketplace</span>
           </div>
-          <span className="text-sm font-medium">Home</span>
+          <Link to="/company-details" className="text-sm font-medium hover:text-gray-300 transition-colors">
+            Home
+          </Link>
           <span className="text-sm font-medium">Operations</span>
           <span className="text-sm font-medium">Products</span>
-          <span className="text-sm font-medium">Settings</span>
+          <Link to="/settings" className="text-sm font-medium hover:text-gray-300 transition-colors">
+            Settings
+          </Link>
           <span className="text-sm font-medium">Reports</span>
           <span className="text-sm font-medium">Themes</span>
           <span className="text-sm font-medium">Programs</span>
