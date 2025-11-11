@@ -18,7 +18,9 @@ export const SecondaryNavbar = () => {
         <Link to="/company-details" className={tabClass('/company-details')}>
           Home
         </Link>
-        <span className="text-sm text-gray-600">Operations</span>
+        <Link to="/company-details" className={tabClass('/company-details')}>
+          Operations
+        </Link>
         <span className="text-sm text-gray-600">Products</span>
         <Link to="/settings" className={tabClass('/settings')}>
           Settings

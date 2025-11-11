@@ -14,7 +14,9 @@ export const TopNavbar = () => {
           <Link to="/company-details" className="text-sm font-medium hover:text-gray-300 transition-colors">
             Home
           </Link>
-          <span className="text-sm font-medium">Operations</span>
+          <Link to="/company-details" className="text-sm font-medium hover:text-gray-300 transition-colors">
+            Operations
+          </Link>
           <span className="text-sm font-medium">Products</span>
           <Link to="/settings" className="text-sm font-medium hover:text-gray-300 transition-colors">
             Settings
