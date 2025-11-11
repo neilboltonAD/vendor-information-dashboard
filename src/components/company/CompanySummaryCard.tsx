@@ -41,18 +41,6 @@ export const CompanySummaryCard: React.FC<CompanySummaryCardProps> = ({ isResell
             <h1 className="text-2xl font-bold text-gray-800 mt-1 mb-0">AppDirect Demonstration 5</h1>
           </div>
         </div>
-        <div>
-          <button
-            onClick={onToggleCompanyType}
-            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-md hover:from-blue-700 hover:to-purple-700 transition-colors text-sm font-medium shadow-md"
-            title="Toggle between Reseller and End Customer views"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
-            <span>DEMO: Switch to {isReseller ? 'End Customer' : 'Reseller'}</span>
-          </button>
-        </div>
       </div>
     <div className="flex mt-6 divide-x divide-gray-200 bg-gray-50 rounded-b shadow-inner">
       {[

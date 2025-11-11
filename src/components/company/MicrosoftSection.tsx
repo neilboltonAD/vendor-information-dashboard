@@ -770,11 +770,56 @@ const CreateTenantModal = ({
     language: 'en'
   });
 
+  const [suggestedDomains, setSuggestedDomains] = useState<string[]>([]);
+
+  // Generate 3 suggested domains based on company name
+  const generateSuggestedDomains = (companyName: string) => {
+    if (!companyName.trim()) {
+      return [];
+    }
+
+    // Clean and format the company name
+    const cleanName = companyName
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '') // Remove special characters and spaces
+      .substring(0, 20); // Limit length
+
+    if (cleanName.length === 0) {
+      return [];
+    }
+
+    // Generate 3 variations
+    const randomNum1 = Math.floor(Math.random() * 900) + 100; // 3-digit number
+    const randomNum2 = Math.floor(Math.random() * 9000) + 1000; // 4-digit number
+
+    const suffixes = ['tech', 'corp', 'group', 'inc', 'co', 'systems', 'solutions', 'digital', 'cloud', 'labs'];
+    const randomSuffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+
+    return [
+      `${cleanName}${randomNum1}.onmicrosoft.com`,
+      `${cleanName}${randomSuffix}.onmicrosoft.com`,
+      `${cleanName}${randomNum2}.onmicrosoft.com`
+    ];
+  };
+
+  // Handle company name change
+  const handleCompanyNameChange = (value: string) => {
+    setFormData(prev => ({ ...prev, companyName: value, domain: '' }));
+    
+    if (value.trim()) {
+      const domains = generateSuggestedDomains(value);
+      setSuggestedDomains(domains);
+    } else {
+      setSuggestedDomains([]);
+    }
+  };
+
   const handleSubmit = () => {
     if (formData.companyName && formData.domain && formData.email && formData.firstName && 
         formData.lastName && formData.addressLine1 && formData.city && formData.state && 
         formData.country && formData.postalCode) {
       onConfirm(formData);
+      // Reset form
       setFormData({
         companyName: '',
         domain: '',
@@ -790,7 +835,29 @@ const CreateTenantModal = ({
         culture: 'en-US',
         language: 'en'
       });
+      setSuggestedDomains([]);
     }
+  };
+
+  const handleClose = () => {
+    // Reset form when closing
+    setFormData({
+      companyName: '',
+      domain: '',
+      email: '',
+      firstName: '',
+      lastName: '',
+      addressLine1: '',
+      city: '',
+      state: '',
+      country: 'US',
+      postalCode: '',
+      phoneNumber: '',
+      culture: 'en-US',
+      language: 'en'
+    });
+    setSuggestedDomains([]);
+    onClose();
   };
 
   if (!open) return null;
@@ -800,26 +867,58 @@ const CreateTenantModal = ({
       <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-lg font-semibold mb-4 text-gray-800">Create New Tenant</h2>
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div>
+          <div className="col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
             <input
               type="text"
               value={formData.companyName}
-              onChange={(e) => setFormData({...formData, companyName: e.target.value})}
+              onChange={(e) => handleCompanyNameChange(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter company name"
               required
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Domain *</label>
-            <input
-              type="text"
-              value={formData.domain}
-              onChange={(e) => setFormData({...formData, domain: e.target.value})}
-              placeholder="company.onmicrosoft.com"
-              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Select Domain *</label>
+            {suggestedDomains.length > 0 ? (
+              <>
+                <div className="space-y-2">
+                  {suggestedDomains.map((domain, index) => (
+                    <label
+                      key={index}
+                      className={`flex items-center p-3 border-2 rounded-lg cursor-pointer transition-all ${
+                        formData.domain === domain
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-300 hover:border-blue-300 bg-white'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="domain"
+                        value={domain}
+                        checked={formData.domain === domain}
+                        onChange={(e) => setFormData({...formData, domain: e.target.value})}
+                        className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className={`ml-3 font-medium ${
+                        formData.domain === domain ? 'text-blue-700' : 'text-gray-700'
+                      }`}>
+                        {domain}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+                <p className="mt-2 text-xs text-gray-500">
+                  Choose one of the suggested Microsoft tenant domains. This will be your organization's primary domain.
+                </p>
+              </>
+            ) : (
+              <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 text-center">
+                <p className="text-sm text-gray-500">
+                  Enter a company name above to see suggested domain options
+                </p>
+              </div>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
@@ -918,7 +1017,7 @@ const CreateTenantModal = ({
         <div className="flex justify-end space-x-3">
           <button
             className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
-            onClick={onClose}
+            onClick={handleClose}
           >
             Cancel
           </button>
@@ -1063,11 +1162,18 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
 
   // Toggle configuration status for demo purposes
   const toggleConfigurationStatus = () => {
-    setPartnerInfo(prev => ({
-      ...prev,
-      isConfigured: !prev.isConfigured,
-      mpnId: prev.isConfigured ? '' : '5347093' // Set demo MPN ID when toggling to configured
-    }));
+    setPartnerInfo(prev => {
+      const newConfigured = !prev.isConfigured;
+      // For end-customers, also update relationship request status
+      if (!prev.isReseller) {
+        setRelationshipRequestStatus(newConfigured ? 'linked' : 'not_sent');
+      }
+      return {
+        ...prev,
+        isConfigured: newConfigured,
+        mpnId: newConfigured ? '5347093' : '' // Set demo MPN ID when toggling to configured
+      };
+    });
   };
 
   // Onboarding states
@@ -1079,6 +1185,9 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
   
   // Distributor's unique relationship request ID (would come from backend in real implementation)
   const distributorRelationshipId = '5d3260c0-122a-4413-bcc5-1c1c5dab01ce';
+
+  // Relationship request status for end-customers
+  const [relationshipRequestStatus, setRelationshipRequestStatus] = useState<'not_sent' | 'pending' | 'linked'>('not_sent');
 
   // Tenant state - Only for end-customers, not resellers
   const [isTenantLinked, setIsTenantLinked] = useState(!partnerInfo.isReseller);
@@ -1260,6 +1369,8 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
   // MCA Authorization state (End Customer)
   const [mcaStatus, setMcaStatus] = useState<'valid' | 'invalid' | 'pending'>('valid');
   const [showMcaModal, setShowMcaModal] = useState(false);
+  const [isCreatingTenantFlow, setIsCreatingTenantFlow] = useState(false); // Track if MCA is for tenant creation
+  const [mcaNotificationId, setMcaNotificationId] = useState<string | null>(null); // Track MCA notification for dismissal
   const [mcaSignatory, setMcaSignatory] = useState({
     firstName: 'John',
     lastName: 'Smith',
@@ -1335,11 +1446,29 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
   const handleMcaSubmit = () => {
     setMcaStatus('pending');
     setShowMcaModal(false);
-    notifications.show({
-      title: 'MCA Authorization Submitted',
-      message: 'Your Microsoft Customer Agreement authorization is being processed.',
-      color: 'blue',
-    });
+    
+    // Dismiss the persistent MCA notification if it exists
+    if (mcaNotificationId) {
+      notifications.hide(mcaNotificationId);
+      setMcaNotificationId(null);
+    }
+    
+    if (isCreatingTenantFlow) {
+      // If we're in the tenant creation flow, now show the Create Tenant modal
+      notifications.show({
+        title: 'MCA Attestation Complete',
+        message: 'Now you can proceed to create the tenant.',
+        color: 'green',
+      });
+      setIsCreatingTenantFlow(false);
+      setShowCreateTenantModal(true);
+    } else {
+      notifications.show({
+        title: 'MCA Authorization Submitted',
+        message: 'Your Microsoft Customer Agreement authorization is being processed.',
+        color: 'blue',
+      });
+    }
   };
 
   const handleGdapNew = () => {
@@ -1593,6 +1722,33 @@ export const MicrosoftSection: React.FC<MicrosoftSectionProps> = ({ isResellerCo
     setShowPartnershipInviteModal(true);
   };
 
+  const handleSendResellerRelationshipRequest = () => {
+    // In real implementation, this would send a relationship request to the customer
+    setRelationshipRequestStatus('pending');
+    notifications.show({
+      title: 'Reseller Relationship Request Sent',
+      message: 'The customer will receive a relationship request to connect their Microsoft tenant.',
+      color: 'blue',
+    });
+  };
+
+  const toggleRelationshipRequestStatus = () => {
+    setRelationshipRequestStatus(prev => {
+      if (prev === 'not_sent') return 'pending';
+      if (prev === 'pending') return 'linked';
+      return 'not_sent';
+    });
+    
+    // When toggling to 'linked', also set configured status
+    if (relationshipRequestStatus === 'pending') {
+      setPartnerInfo(prev => ({
+        ...prev,
+        isConfigured: true,
+        mpnId: '5347093' // Set demo MPN ID
+      }));
+    }
+  };
+
   const handleSendPartnershipInvite = () => {
     if (partnerEmailInput.trim()) {
       // In real implementation, this would trigger an email via backend
@@ -1660,7 +1816,25 @@ Best regards,
   };
 
   const handleCreateNewTenant = () => {
-    setShowCreateTenantModal(true);
+    // MCA is required before creating a tenant
+    const notificationId = notifications.show({
+      title: 'MCA Attestation Required',
+      message: 'We need you to attest an MCA before we create your tenant.',
+      color: 'blue',
+      autoClose: false, // Keep notification visible until user completes or cancels
+      withCloseButton: false, // Don't allow manual dismissal
+    });
+    
+    // Store notification ID so we can dismiss it later
+    setMcaNotificationId(notificationId);
+    
+    // Set flag that we're in tenant creation flow
+    setIsCreatingTenantFlow(true);
+    
+    // Show MCA modal
+    setTimeout(() => {
+      setShowMcaModal(true);
+    }, 500); // Small delay so user can see the notification
   };
 
   const handleLinkTenant = () => {
@@ -1679,7 +1853,20 @@ Best regards,
     
     setTenantData(newTenantData);
     setIsTenantLinked(true);
+    setRelationshipRequestStatus('linked');
+    setMcaStatus('valid'); // MCA is now valid since it was attested during tenant creation
+    setPartnerInfo(prev => ({
+      ...prev,
+      isConfigured: true,
+      mpnId: '5347093'
+    }));
     setShowCreateTenantModal(false);
+    
+    notifications.show({
+      title: 'Tenant Created Successfully',
+      message: `New Microsoft 365 tenant ${formData.domain} has been created and configured with MCA attestation.`,
+      color: 'green',
+    });
   };
 
   const handleLinkTenantConfirm = (domain: string) => {
@@ -1977,21 +2164,22 @@ Best regards,
       
       {/* Partner Information Section - Always visible */}
       {!partnerInfo.isConfigured ? (
-        // Onboarding UI - When MPN ID is not configured
-        <div className="mb-6 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 rounded-lg shadow-lg p-6">
-          <div className="flex items-start mb-4">
-            <div className="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-full mr-4">
-              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
+        partnerInfo.isReseller ? (
+          // Reseller Onboarding UI - When MPN ID is not configured
+          <div className="mb-6 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 rounded-lg shadow-lg p-6">
+            <div className="flex items-start mb-4">
+              <div className="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-full mr-4">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-gray-800 mb-2">Complete Reseller Onboarding</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  This reseller company needs to be configured with a Microsoft Partner Network (MPN) ID to manage customers and transact CSP products.
+                </p>
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Complete Reseller Onboarding</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                This reseller company needs to be configured with a Microsoft Partner Network (MPN) ID to manage customers and transact CSP products.
-              </p>
-            </div>
-          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Option 1: Configure MPN ID */}
@@ -2051,6 +2239,123 @@ Best regards,
             </div>
           </div>
         </div>
+        ) : (
+          // End-Customer Onboarding UI - Create or Link Microsoft Tenant
+          <div className="mb-6 bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-300 rounded-lg shadow-lg p-6">
+            <div className="flex items-start mb-4">
+              <div className="flex items-center justify-center w-12 h-12 bg-green-600 rounded-full mr-4">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-gray-800 mb-2">Setup Microsoft Tenant</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Create a new Microsoft 365 tenant for the customer or link their existing tenant to your organization.
+                </p>
+              </div>
+            </div>
+
+            {relationshipRequestStatus === 'not_sent' ? (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Option 1: Create New Tenant */}
+                  <div className="bg-white border-2 border-blue-200 rounded-lg p-4 hover:border-blue-400 transition-colors">
+                    <div className="flex items-center mb-3">
+                      <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full mr-3">
+                        <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                      </div>
+                      <h4 className="font-bold text-gray-800">Create New Tenant</h4>
+                    </div>
+                    <p className="text-xs text-gray-600 mb-4">
+                      Create a new Microsoft 365 tenant for a customer who doesn't have one yet. This will provision a new tenant with the customer's domain.
+                    </p>
+                    <button
+                      onClick={handleCreateNewTenant}
+                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium text-sm"
+                    >
+                      Create New Tenant
+                    </button>
+                  </div>
+
+                  {/* Option 2: Link Existing Tenant */}
+                  <div className="bg-white border-2 border-green-200 rounded-lg p-4 hover:border-green-400 transition-colors">
+                    <div className="flex items-center mb-3">
+                      <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full mr-3">
+                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                      </div>
+                      <h4 className="font-bold text-gray-800">Link Existing Tenant</h4>
+                    </div>
+                    <p className="text-xs text-gray-600 mb-4">
+                      Send a reseller relationship request to connect the customer's existing Microsoft 365 tenant. They must approve the relationship to proceed.
+                    </p>
+                    <button
+                      onClick={handleSendResellerRelationshipRequest}
+                      className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium text-sm"
+                    >
+                      Link Existing Tenant
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-4 p-3 bg-green-100 border border-green-300 rounded-lg">
+                  <div className="flex items-start">
+                    <svg className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div className="text-xs text-green-800">
+                      <strong>Note:</strong> When linking an existing tenant, the customer must have Global Administrator permissions to approve the relationship request. 
+                      <a href="https://learn.microsoft.com/en-us/partner-center/customers/request-a-relationship-with-a-customer" target="_blank" rel="noopener noreferrer" className="underline hover:text-green-900 ml-1">
+                        Learn more about customer relationships
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : relationshipRequestStatus === 'pending' ? (
+              <div className="bg-amber-50 border-2 border-amber-300 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center">
+                    <div className="flex items-center justify-center w-10 h-10 bg-amber-100 rounded-full mr-3">
+                      <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-800">Relationship Request Pending</h4>
+                      <p className="text-xs text-gray-600 mt-1">Awaiting customer approval</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={toggleRelationshipRequestStatus}
+                    className="flex items-center space-x-1.5 px-2 py-1 bg-indigo-50 border border-indigo-200 rounded hover:bg-indigo-100 transition-colors text-[10px] font-medium text-indigo-600 uppercase tracking-wide"
+                    title="Demo: Toggle to Linked status"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>Demo: Link</span>
+                  </button>
+                </div>
+                <div className="bg-white rounded p-3 border border-amber-200">
+                  <p className="text-xs text-gray-700 mb-2">
+                    The customer needs to sign in to their Microsoft 365 Admin Center and approve the relationship request before the connection is established.
+                  </p>
+                  <div className="flex items-center text-xs text-amber-700 font-medium mt-2">
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Request sent - pending customer action
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        )
       ) : !partnerInfo.isReseller ? (
         // Configured UI for End-Customers - When MPN ID is set (1:1 relationship)
         <ExpandableSection
@@ -3261,26 +3566,6 @@ Best regards,
             </div>
           </ExpandableSection>
         </>
-      ) : !partnerInfo.isReseller && isTenantLinked ? (
-        null
-      ) : !partnerInfo.isReseller ? (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
-          <div className="text-lg font-semibold text-gray-700 mb-4">No tenant linked</div>
-          <div className="flex justify-center space-x-4">
-            <button
-              className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-              onClick={handleCreateNewTenant}
-            >
-              Create New Tenant
-            </button>
-            <button
-              className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 transition-colors"
-              onClick={handleLinkTenant}
-            >
-              Link Tenant
-            </button>
-          </div>
-        </div>
       ) : null}
 
       {/* GDAP Options Modal */}
@@ -3311,11 +3596,34 @@ Best regards,
       {/* MCA Attestation Modal */}
       <McaAttestationModal
         open={showMcaModal}
-        onClose={() => setShowMcaModal(false)}
+        onClose={() => {
+          setShowMcaModal(false);
+          setIsCreatingTenantFlow(false); // Reset tenant creation flow if modal is closed
+          
+          // Dismiss the persistent MCA notification if user cancels
+          if (mcaNotificationId) {
+            notifications.hide(mcaNotificationId);
+            setMcaNotificationId(null);
+          }
+        }}
         mcaSignatory={mcaSignatory}
         setMcaSignatory={setMcaSignatory}
         onSubmit={handleMcaSubmit}
-        isGenerateMode={mcaStatus === 'invalid'}
+        isGenerateMode={mcaStatus === 'invalid' || isCreatingTenantFlow} // Generate mode for new tenant or invalid MCA
+      />
+
+      {/* Create Tenant Modal */}
+      <CreateTenantModal
+        open={showCreateTenantModal}
+        onClose={() => setShowCreateTenantModal(false)}
+        onConfirm={handleCreateTenantConfirm}
+      />
+
+      {/* Link Tenant Modal */}
+      <LinkTenantModal
+        open={showLinkTenantModal}
+        onClose={() => setShowLinkTenantModal(false)}
+        onConfirm={handleLinkTenantConfirm}
       />
     </div>
   );
